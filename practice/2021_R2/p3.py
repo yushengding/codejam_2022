@@ -51,22 +51,31 @@ def solve(T):
       top = waitlist.pop()
     if top and waitlist:
       edges.remove((waitlist[-1], top))
-    edges.add((waitlist[-1], i))
-    edges.add((i, top))
+    if waitlist:
+      edges.add((waitlist[-1], i))
+    if top != None:
+      edges.add((i, top))
+    waitlist.append(i)
   graph = defaultdict(list)
   for i, j in edges:
     graph[i].append(j)
-  
-  def helper(i, N):
+  # print(graph)
+  def helper(i):
     ans = 1
+    nums = []
     for child in graph[i]:
-      
-
-
-
+      c_num, c_ans = helper(child)
+      ans *= c_ans
+      ans %= mod
+      nums.append(c_num)
+    total = sum(nums)
+    for num in nums:
+      ans *= getC(total, num)
+      ans %= mod
+      total -= num
+    return sum(nums) + 1, ans
   
-
-
+  return helper(waitlist[0])[1]
 
 for caseNr in range(1, int(testcases) + 1):
     print("Case #%i: %s" % (caseNr, solve(caseNr)))
